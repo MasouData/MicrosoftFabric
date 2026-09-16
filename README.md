@@ -1,5 +1,9 @@
 # Microsoft Fabric DP-700 Hands-On Labs
 
+<p align="center">
+  <img src="https://debruyn.dev/fabric.png" alt="Microsoft Fabric Logo" width="300">
+</p>
+
 A practical learning repository for **Microsoft Fabric Data Engineer (DP-700)** preparation.
 
 The goal of this repository is to complement theory with small hands-on exercises in **Microsoft Fabric Data Engineering, Real-Time Intelligence, OneLake, KQL, notebooks, and Git integration**.
