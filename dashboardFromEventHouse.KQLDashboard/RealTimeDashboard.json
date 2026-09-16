@@ -1,0 +1,138 @@
+{
+  "schema_version": 84,
+  "flavor": "RTDashboard_Regular",
+  "changeDetection": {
+    "kind": "liveUpdates",
+    "fallbackRefreshRate": "5m",
+    "minRefreshRate": "30s"
+  },
+  "tiles": [
+    {
+      "id": "ecddca24-099a-4c14-9c1c-982ffb00817a",
+      "queryRef": {
+        "kind": "query",
+        "queryId": "216a5a54-db89-4638-8b16-bebbe820e9a6"
+      },
+      "title": "cpu_data_eventstream Table Preview",
+      "visualType": "table",
+      "pageId": "38bc1f15-c7fb-4799-acfb-223dfcf5c284",
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 8,
+        "height": 7
+      },
+      "visualOptions": {}
+    },
+    {
+      "id": "701823d8-fc74-4f4c-9639-29d0fe84dbf5",
+      "title": "Dash1",
+      "visualType": "column",
+      "pageId": "8acc374f-d4cf-4286-9f2c-7eaf5eabe52a",
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 9,
+        "height": 7
+      },
+      "queryRef": {
+        "kind": "query",
+        "queryId": "64a77d53-921e-4a6e-87d1-ea858e0116f8"
+      },
+      "visualOptions": {
+        "multipleYAxes": {
+          "base": {
+            "id": "-1",
+            "label": "CPU Usge",
+            "columns": [],
+            "yAxisMaximumValue": null,
+            "yAxisMinimumValue": null,
+            "yAxisScale": "linear",
+            "horizontalLines": []
+          },
+          "additional": [],
+          "showMultiplePanels": false
+        },
+        "seriesColors": {
+          "AVG_CPUUsage": "color--(20)"
+        },
+        "hideLegend": true,
+        "legendLocation": "bottom",
+        "xColumnTitle": "Time",
+        "xColumn": null,
+        "yColumns": [
+          "AVG_CPUUsage"
+        ],
+        "seriesColumns": null,
+        "xAxisScale": "linear",
+        "verticalLine": "",
+        "crossFilter": [],
+        "crossFilterDisabled": false,
+        "drillthroughDisabled": false,
+        "forceAxisTicks": false,
+        "drillthrough": []
+      }
+    }
+  ],
+  "baseQueries": [],
+  "parameters": [
+    {
+      "kind": "duration",
+      "id": "81e5789f-d907-4cde-903e-1806971bd1d4",
+      "displayName": "Time range",
+      "description": "",
+      "beginVariableName": "_startTime",
+      "endVariableName": "_endTime",
+      "defaultValue": {
+        "kind": "dynamic",
+        "count": 1,
+        "unit": "hours"
+      },
+      "showOnPages": {
+        "kind": "all"
+      }
+    }
+  ],
+  "dataSources": [
+    {
+      "id": "35ed8208-d43c-4119-8db8-5af9c1f8216f",
+      "kind": "kusto-trident",
+      "clusterUri": "",
+      "databaseArtifactId": "9434c939-e982-4897-b6fe-d09392e5e7ca",
+      "database": "92e5e7ca-d093-b6fe-4897-e9829434c939",
+      "workspace": "00000000-0000-0000-0000-000000000000",
+      "name": "demoEventHouse"
+    }
+  ],
+  "pages": [
+    {
+      "name": "Page 1",
+      "id": "38bc1f15-c7fb-4799-acfb-223dfcf5c284"
+    },
+    {
+      "name": "Page 2",
+      "id": "8acc374f-d4cf-4286-9f2c-7eaf5eabe52a"
+    }
+  ],
+  "queries": [
+    {
+      "dataSource": {
+        "kind": "inline",
+        "dataSourceId": "35ed8208-d43c-4119-8db8-5af9c1f8216f"
+      },
+      "text": "['cpu_data_eventstream'] | take 10",
+      "id": "216a5a54-db89-4638-8b16-bebbe820e9a6",
+      "usedVariables": []
+    },
+    {
+      "dataSource": {
+        "kind": "inline",
+        "dataSourceId": "35ed8208-d43c-4119-8db8-5af9c1f8216f"
+      },
+      "text": "cpu_data_eventstream\r\n| project AVG_CPUUsage, Window_End_Time",
+      "id": "64a77d53-921e-4a6e-87d1-ea858e0116f8",
+      "usedVariables": []
+    }
+  ],
+  "embeddedApps": []
+}

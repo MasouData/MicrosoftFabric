@@ -18,8 +18,26 @@
       },
       {
         "id": "594da398-a918-47c0-90a6-3264e9ed042b",
-        "content": "// Use 'take' to view a sample number of records in the table and check the data.\ncpu_data_eventstream\n| take 100\n",
+        "content": "// Use 'take' to view a sample number of records in the table and check the data.\ncpu_data_eventstream\n| take 100\n\n.set-or-append cpu_data_eventstream <|\ndatatable(computer: string, AVG_CPUUsage:real, Window_End_Time:datetime)\n[\n    \"LAPTOP-MOAT4OAH\", 35.5, datetime(2026-09-16 10:30:00)\n]\n\n.create table updated_policy_transformed_cpu_data (\n    AVG_CPUUsage : real,\n    Window_End_Time: datetime \n)\n\nupdated_policy_transformed_cpu_data\n| take 10",
         "title": "",
+        "dataSourceId": "2746de17-29bc-4023-8b3a-f6eaed394c0b"
+      },
+      {
+        "id": "4448a6ec-34e4-4734-b2d4-6725a07291f2",
+        "content": "// IsEnabled (bool) - States if update policy is true - enabled, or false - disabled\n// source (string) - Name of the table that triggers invocation of the update policy\n// Query (string) - A query used to produce data for the update\n// IsTransactional (bool) - States if the update policy is transactional or not, default is false). If transactional and the update policy fails, the source table is not updated.\n// PropagateIngestionProperties (bool) - States if properties specified during ingestion to the source table, such as extent tags and creation time, apply to the target table\n// read more - https://aka.ms/updatepolicy\n\n.alter table updated_policy_transformed_cpu_data policy update\n```[{\n    \"IsEnabled\": true,\n    \"Source\": \"cpu_data_eventstream\",\n    \"Query\": \"cpu_data_eventstream | where AVG_CPUUsage > 22 | project AVG_CPUUsage, Window_End_Time\",\n    \"IsTransactional\": false,\n    \"PropagateIngestionProperties\": true\n}]```\n",
+        "title": "demoUpdatedPolicy",
+        "dataSourceId": "2746de17-29bc-4023-8b3a-f6eaed394c0b"
+      },
+      {
+        "id": "103c4efe-fa7a-4559-82ae-5bb331c63d88",
+        "content": ".create table website_visit_sample (\n    visit_id: string,\n    timestamp: datetime,\n    page: string\n)\n\n.ingest inline into table website_visit_sample with (format=\"csv\") <|\nv001,2024-01-01T10:00:00Z,home\nv002,2024-01-01T10:05:00Z,products\nv003,2024-01-01T10:10:00Z,contact\n\nwebsite_visit_sample\n| order by timestamp asc\n\n.create async materialized-view with (\n    docString = \"without backfill materilized view\"\n) mat_view_no_backfill on table website_visit_sample\n{\n    website_visit_sample\n    | extend visit_min = bin(timestamp, 1m)\n    | summarize visit_cnt = count() by visit_min\n}\n\nmat_view_no_backfill\n| order by visit_min asc\n\n\n.create async materialized-view with (\n    docString = \"mat_view with backfill\",\n    backfill = true\n) mat_view_backfill on table website_visit_sample \n{\n    website_visit_sample\n    | extend visit_min = bin(timestamp, 1m)\n    | summarize visit_cnt = count() by visit_min \n}\n\nmat_view_backfill\n| order by visit_min asc \n\n.show materialized-views \n\n.ingest inline into table website_visit_sample with (format=\"csv\") <|\nv004,2024-02-01T10:10:00Z,contact\n",
+        "title": "createMaterializedView",
+        "dataSourceId": "2746de17-29bc-4023-8b3a-f6eaed394c0b"
+      },
+      {
+        "id": "668f60e6-48f9-4d4b-8b06-f4b51a192433",
+        "content": ".create-or-alter function get_visit_by_page(pageName:string )\n{\n    website_visit_sample\n    | where page == pageName\n    | extend visit_min = bin(timestamp, 1m)\n    | summarize visit_cnt= count() by visit_min\n}\n\nget_visit_by_page(\"contact\")\n|order by visit_min asc \n\n.create-or-alter function get_page_name(pageName:string )\n{\n    website_visit_sample\n    | where page == pageName\n}\n\nget_page_name(\"home\")\n|order by timestamp asc ",
+        "title": "createFunction",
         "dataSourceId": "2746de17-29bc-4023-8b3a-f6eaed394c0b"
       }
     ],

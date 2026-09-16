@@ -3,3 +3,22 @@
 
 
 .create-merge table cpu_data_eventstream (computer:string, AVG_CPUUsage:real, Window_End_Time:datetime) 
+.create-merge table updated_policy_transformed_cpu_data (AVG_CPUUsage:real, Window_End_Time:datetime) 
+.create-merge table website_visit_sample (visit_id:string, timestamp:datetime, page:string) 
+.create-or-alter function with (skipvalidation = "true") get_visit_by_page(pageName:string) {
+    website_visit_sample
+    | where page == pageName
+    | extend visit_min = bin(timestamp, 1m)
+    | summarize visit_cnt= count() by visit_min
+}
+.create-or-alter function with (skipvalidation = "true") get_page_name(pageName:string) {
+    website_visit_sample
+    | where page == pageName
+}
+.create-or-alter materialized-view with (DocString = "without backfill materilized view")  mat_view_no_backfill on table website_visit_sample { website_visit_sample
+    | extend visit_min = bin(timestamp, 1m)
+    | summarize visit_cnt = count() by visit_min }
+.create-or-alter materialized-view with (DocString = "mat_view with backfill")  mat_view_backfill on table website_visit_sample { website_visit_sample
+    | extend visit_min = bin(timestamp, 1m)
+    | summarize visit_cnt = count() by visit_min }
+.alter table updated_policy_transformed_cpu_data policy update "[{\"IsEnabled\":true,\"Source\":\"cpu_data_eventstream\",\"Query\":\"cpu_data_eventstream | where AVG_CPUUsage > 22 | project AVG_CPUUsage, Window_End_Time\",\"IsTransactional\":false,\"PropagateIngestionProperties\":true,\"ManagedIdentity\":null}]"
