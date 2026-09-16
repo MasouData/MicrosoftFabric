@@ -1,7 +1,7 @@
 # Microsoft Fabric DP-700 Hands-On Labs
 
 <p align="center">
-  <img src="https://debruyn.dev/fabric.png" alt="Microsoft Fabric Logo" width="300">
+  <img src="https://davidalzamendi.com/wp-content/uploads/2023/05/Fabric_final_x256.png" alt="Microsoft Fabric Logo" width="100">
 </p>
 
 A practical learning repository for **Microsoft Fabric Data Engineer (DP-700)** preparation.
