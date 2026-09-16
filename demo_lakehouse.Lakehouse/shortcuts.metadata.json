@@ -11,5 +11,17 @@
         "artifactType": "KustoDatabase"
       }
     }
+  },
+  {
+    "name": "container12",
+    "path": "/Files",
+    "target": {
+      "type": "AdlsGen2",
+      "adlsGen2": {
+        "connectionId": "74367442-a16e-4448-bd39-edb8cb29c937",
+        "location": "https://resourcegroup121.dfs.core.windows.net",
+        "subpath": "/container12"
+      }
+    }
   }
 ]
