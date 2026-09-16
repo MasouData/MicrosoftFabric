@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "name": "cpu_data_eventstream",
+    "path": "/Tables/dbo",
+    "target": {
+      "type": "OneLake",
+      "oneLake": {
+        "path": "Tables/cpu_data_eventstream",
+        "itemId": "92e5e7ca-d093-b6fe-4897-e9829434c939",
+        "workspaceId": "00000000-0000-0000-0000-000000000000",
+        "artifactType": "KustoDatabase"
+      }
+    }
+  }
+]
